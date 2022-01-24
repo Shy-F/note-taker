@@ -1,4 +1,4 @@
-let noteTitle = $('.note-title');
+let noteTitle;
 let noteText;
 let saveNoteBtn;
 let newNoteBtn;
