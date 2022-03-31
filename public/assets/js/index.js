@@ -25,13 +25,13 @@ var deleteNote = function(id) {
   return $.ajax({
     url: "api/notes/" + id,
     method: "DELETE"
-  })
+  });
 };
 
 var renderActiveNote = function() {
   $saveNoteBtn.hide();
 
-  if (typeof activeNote.id === "number") {
+  if (activeNote.id) {
     $noteTitle.attr("readonly", true);
     $noteText.attr("readonly", true);
     $noteTitle.val(activeNote.title);
@@ -50,23 +50,27 @@ var handleNoteSave = function() {
     text: $noteText.val()
   };
 
-  saveNote(newNote);
+  saveNote(newNote).then(function(data) {
     getAndRenderNotes();
     renderActiveNote();
+  });
 };
 
 var handleNoteDelete = function(event) {
   event.stopPropagation();
 
-  var note = $(this).data('id');
+  var note = $(this)
+    .parent(".list-group-item")
+    .data();
 
-  if (activeNote.id === note) {
+  if (activeNote.id === note.id) {
     activeNote = {};
   }
 
-  deleteNote(note);
-  getAndRenderNotes();
-  renderActiveNote();
+  deleteNote(note.id).then(function() {
+    getAndRenderNotes();
+    renderActiveNote();
+  });
 };
 
 var handleNoteView = function() {
@@ -96,11 +100,9 @@ var renderNoteList = function(notes) {
     var note = notes[i];
 
     var $li = $("<li class='list-group-item'>").data(note);
-    $li.data('id',i);
-
     var $span = $("<span>").text(note.title);
     var $delBtn = $(
-      "<i class='fas fa-trash-alt float-right text-danger delete-note' data-id="+i+">"
+      "<i class='fas fa-trash-alt float-right text-danger delete-note'>"
     );
 
     $li.append($span, $delBtn);
@@ -123,4 +125,5 @@ $noteList.on("click", ".delete-note", handleNoteDelete);
 $noteTitle.on("keyup", handleRenderSaveBtn);
 $noteText.on("keyup", handleRenderSaveBtn);
 
+// Gets and renders the initial list of notes
 getAndRenderNotes();
