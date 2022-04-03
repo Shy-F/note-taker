@@ -1,8 +1,8 @@
-var $noteTitle = $(".note-title");
-var $noteText = $(".note-textarea");
-var $saveNoteBtn = $(".save-note");
-var $newNoteBtn = $(".new-note");
+var $textTitle = $(".note-title");
+var $textArea = $(".note-textarea");
 var $noteList = $(".list-container .list-group");
+var $saveNote = $(".save-note");
+var $newNoteBtn = $(".new-note");
 
 var activeNote = {};
 
@@ -29,25 +29,25 @@ var deleteNote = function (id) {
 };
 
 var renderActiveNote = function () {
-  $saveNoteBtn.hide();
+  $saveNote.hide();
 
   if (activeNote.id) {
-    $noteTitle.attr("readonly", true);
-    $noteText.attr("readonly", true);
-    $noteTitle.val(activeNote.title);
-    $noteText.val(activeNote.text);
+    $textTitle.attr("readonly", true);
+    $textArea.attr("readonly", true);
+    $textTitle.val(activeNote.title);
+    $textArea.val(activeNote.text);
   } else {
-    $noteTitle.attr("readonly", false);
-    $noteText.attr("readonly", false);
-    $noteTitle.val("");
-    $noteText.val("");
+    $textTitle.attr("readonly", false);
+    $textArea.attr("readonly", false);
+    $textTitle.val("");
+    $textArea.val("");
   }
 };
 
 var handleNoteSave = function () {
   var newNote = {
-    title: $noteTitle.val(),
-    text: $noteText.val()
+    title: $textTitle.val(),
+    text: $textArea.val()
   };
 
   saveNote(newNote).then(function (data) {
@@ -84,10 +84,10 @@ var handleNewNoteView = function () {
 };
 
 var handleRenderSaveBtn = function () {
-  if (!$noteTitle.val().trim() || !$noteText.val().trim()) {
-    $saveNoteBtn.hide();
+  if (!$textTitle.val().trim() || !$textArea.val().trim()) {
+    $saveNote.hide();
   } else {
-    $saveNoteBtn.show();
+    $saveNote.show();
   }
 };
 
@@ -118,11 +118,11 @@ var getAndRenderNotes = function () {
   });
 };
 
-$saveNoteBtn.on("click", handleNoteSave);
+$saveNote.on("click", handleNoteSave);
 $noteList.on("click", ".list-group-item", handleNoteView);
 $newNoteBtn.on("click", handleNewNoteView);
 $noteList.on("click", ".delete-note", handleNoteDelete);
-$noteTitle.on("keyup", handleRenderSaveBtn);
-$noteText.on("keyup", handleRenderSaveBtn);
+$textTitle.on("keyup", handleRenderSaveBtn);
+$textArea.on("keyup", handleRenderSaveBtn);
 
 getAndRenderNotes();
